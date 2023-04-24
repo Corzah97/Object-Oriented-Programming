@@ -67,14 +67,14 @@ function promptUser() {
         {
             type: "input",
             message: "Choose the color you would like for your background (Ex: red, blue, green)",
-            name: "shapebackgroundColor",
+            name: "shapeBackgroundColor",
         },
 
         {
             type: "list",
             message: "Choose the shape you would like for your logo (Ex: triangle, square, circle)",
             name: "shape",
-            chocies: ["Triangle", "Square", "Circle"]
+            choices: ["Triangle", "Square", "Circle"]
         },
     ])
 
@@ -88,7 +88,7 @@ function promptUser() {
         }
         else {shape = new Circle()}
 
-        shape.setColor(answers.shapebackgroundColor)
+        shape.setColor(answers.shapeBackgroundColor)
         
         if (answers.text.length > 3) {
             console.log("Please choose no more then 3 characters");
@@ -97,7 +97,7 @@ function promptUser() {
             let svgInst = new Svg()
             svgInst.setText(answers.text,answers.textColor);
             svgInst.setShape(shape);
-            fs.writeToFile("logo-test.svg", svgInst.render());
+            writeToFile("logo-test.svg", svgInst.render());
         }
         
     
