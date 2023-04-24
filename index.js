@@ -12,7 +12,7 @@ const { prependListener } = require("process");
 
 function writeToFile(fileName, answers) {
 
-      // File starts as an empty string
+      //Starts as an empty string
   let svgString = "";
   // Sets width and height of logo container
  svgString =
