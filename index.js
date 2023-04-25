@@ -8,99 +8,101 @@ const { Triangle, Square, Circle } = require("./lib/shapes.js");
 const Svg = require("./lib/svg");
 const { prependListener } = require("process");
 
-//Function writes the SVG File to prompt user for input
-
-function writeToFile(fileName, answers) {
-
-      //Starts as an empty string
-  let svgString = "";
-  // Sets width and height of logo container
- svgString =
-    '<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg"/>';
-  
-    // svgString += "<g>";
-  
-    svgString += `${answers.shape}`;
-
-  let shapeChoice;
-  if (answers.shape === "Triangle") {
-    shapeChoice = new Triangle();
-    svgString += `<polygon height=“100%” width=“100%” points=“0,200 300,200 150,0” fill=“${answers.color}“/>`;
-  } else if (answers.shape === "Square") {
-    shapeChoice = new Square();
-    svgString += `<rect x=“50” height=“200" width=“200” fill=“${answers.color}“/>`;
-  } else {
-    shapeChoice = new Circle();
-    svgString += `<circle cx=“50%” cy=“50%” r=“100” height=“100%” width=“100%” fill='${answers.color}'/>`;
-  }
-
- 
-  svgString += `<text x="150" y="130" text-anchor="middle" font-size="40" fill="${answers.textColor}">${answers.text}</text>`;
-  // Closing </g> tag
-//   svgString += "</g>";
-  // Closing </svg> tag
-  svgString += "</svg>";
-
-  
-  fs.writeFile(fileName, svgString, (err) => {
-    err ? console.log(err) : console.log("Generated logo.svg");
-  });
-}
 
 
 //Function that utilizes inquirer to prompt user for input
-function promptUser() {
-    inquirer.prompt([
+const questions = [
 
-        {
-            type: "input",
-            message: "What text would you like to add to your logo? Choose up to 3 Characters",
-            name: "text"
-        },
+    {
+        type: "input",
+        message: "What text would you like to add to your logo? Choose up to 3 Characters",
+        name: "text"
+    },
 
-        {
-            type: "input",
-            message: "Choose the color you would like for your text (Ex: red, blue, green)",
-            name: "textColor",
-        },
+    {
+        type: "input",
+        message: "Choose the color you would like for your text (Ex: red, blue, green)",
+        name: "textColor",
+    },
 
-        {
-            type: "input",
-            message: "Choose the color you would like for your background (Ex: red, blue, green)",
-            name: "shapeBackgroundColor",
-        },
+    {
+        type: "input",
+        message: "Choose the color you would like for your background (Ex: red, blue, green)",
+        name: "shapeBackgroundColor",
+    },
 
-        {
-            type: "list",
-            message: "Choose the shape you would like for your logo (Ex: triangle, square, circle)",
-            name: "shape",
-            choices: ["Triangle", "Square", "Circle"]
-        },
-    ])
+    {
+        type: "list",
+        message: "Choose the shape you would like for your logo (Ex: triangle, square, circle)",
+        name: "shape",
+        choices: ["Triangle", "Square", "Circle"]
+    },
+]
 
-    .then((answers) => {
-        let shape = null
-        if (answers.shape === "Triangle") {
-            shape = new Triangle()
-        }
-        else if(answers.shape === "Square") {
-            shape = new Square()
-        }
-        else {shape = new Circle()}
+//Function writes the SVG File to prompt user for input
 
-        shape.setColor(answers.shapeBackgroundColor)
-        
-        if (answers.text.length > 3) {
-            console.log("Please choose no more then 3 characters");
-            promptUser();
-        } else {
-            let svgInst = new Svg()
-            svgInst.setText(answers.text,answers.textColor);
-            svgInst.setShape(shape);
-            writeToFile("logo-test.svg", svgInst.render());
-        }
-        
-    
+function writeToFile(fileName, data) {
+console.log(`Writing [${data}] to file [${fileName}]`);
+fs.writeFile(fileName, data, function (err) {
+if (err) {
+  return console.log(err);
+}
+console.log('You have Generated a logo.svg!');
 });
 }
-promptUser()
+
+async function init() {
+console.log('Starting init');
+let svgString = '';
+const svg_file = 'logo.svg';
+
+// Prompt the user for answers to questions
+const answers = await inquirer.prompt(questions);
+
+// User text
+const userText = answers.text.slice(0, 3);
+console.log(`User text: [${userText}]`);
+
+// User font color
+const userFontColor = answers['textColor'];
+console.log(`User font color: [${userFontColor}]`);
+
+// User shape color
+const userShapeColor = answers['shapeBackgroundColor'];
+console.log(`User shape color: [${userShapeColor}]`);
+
+// User shape type
+const userShapeType = answers['shape'];
+console.log(`User entered shape = [${userShapeType}]`);
+
+// User shape
+let userShape;
+if (userShapeType.toLowerCase() === 'square') {
+userShape = new Square();
+console.log('User selected Square shape');
+} else if (userShapeType.toLowerCase() === 'circle') {
+userShape = new Circle();
+console.log('User selected Circle shape');
+} else if (userShapeType.toLowerCase() === 'triangle') {
+userShape = new Triangle();
+console.log('User selected Triangle shape');
+} else {
+console.log('Invalid shape!');
+return;
+}
+userShape.setColor(userShapeColor);
+
+// Create a new Svg and add the shape and text elements to it
+const svg = new Svg();
+svg.setTextElement(userText, userFontColor);
+svg.setShapeElement(userShape);
+svgString = svg.render();
+
+console.log("Shape generation complete!");
+console.log("Writing shape to Examples folder...");
+// putting created svg file into Examples folder
+const filePath = './Examples/' + svg_file;
+writeToFile(filePath, svgString); 
+}
+
+init();
