@@ -75,14 +75,14 @@ THEN I am shown a 300x200 pixel image that matches the criteria I entered
 
   ## Screenshot
 
- ![Front Page](/Object-Oriented-Programming/Images/Index.js%20Screenshot.png)
+ ![Front Page](/Images/Index.js%20Screenshot.png)
 
- ![Terminal Screenshot](/Object-Oriented-Programming/Images/Terminal%20Screenshot.png)
+ ![Terminal Screenshot](/Images/Terminal%20Screenshot.png)
 
- ![SVG Logo Screenshot](/Object-Oriented-Programming/Images/svg%20screenshot.png)
+ ![SVG Logo Screenshot](/Images/svg%20screenshot.png)
 
  ## Mock-Up
- ![Photo](/Object-Oriented-Programming/Images/OOP-demo.gif)
+ ![Photo](/Images/OOP-demo.gif)
 
  ## Walkthrough 
 
